@@ -180,12 +180,18 @@ commuterstable <- data.frame(
           max(commuters$TRANTIME), max(commuters$INCTOT) / 1e6)
 )
 
-#acs2024table
-acs2024rounded <- acs2024table
-acs2024rounded[, -1] <- round(acs2024table[, -1], 2)
+#commuterstable
+commutersrounded <- commuterstable
+commutersrounded[, -1] <- round(commuterstable[, -1], 2)
 #acs2024rounded
 
-knitr::kable(acs2024rounded, 
+knitr::kable(commutersrounded, 
              caption = "Table 2: Summary Statistics for 2024 ACS Commuters Sample",
              digits = 2)
+```
+
+## 4. Visualize and Interpret
+
+```{r}
+commuters %>%
 ```
