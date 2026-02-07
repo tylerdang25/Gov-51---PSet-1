@@ -1,6 +1,6 @@
 ---
 title: "Gov 51 - Pset 1"
-author: "Tyler Dang - https://github.com/tylerdang25/Gov-51---Pset-1.git"
+author: "Tyler Dang - https://github.com/tylerdang25/Gov-51---PSet-1.git"
 format: pdf
 editor: visual
 ---
@@ -98,4 +98,94 @@ The maximum daily commute time of 195 minutes or 3.25 hours can make sense for a
 ## 3. Who Should Be in Your Analysis
 
 ```{r}
+#1a
+acs20241 <- acs2024 %>%
+  filter(TRANTIME == 0)
+
+acs20241 %>% 
+  summarise("Number of TRANTIME == 0" = n())
+
+acs2024 %>% 
+  summarise("Total Observations" = n())
+
+Percentage1a <- mean(acs2024$TRANTIME == 0, na.rm = TRUE) *100
+Percentage1a
+
+#1b
+acs20241 %>% 
+  filter(unemployed == 1) %>% 
+  summarise("Number of Unemployed" = n())
+
+acs20241 %>% 
+  filter(nlf == 1) %>% 
+  summarise("Number of those Not in Labor Force" = n())
+
+acs20241 %>% 
+  filter(employed == 0) %>%
+  filter(nlf == 0) %>%
+  filter(unemployed == 0) %>% 
+  summarise("Number of People not reported as Employed, Unemployed, or in Labor Force" 
+            = n())
+```
+
+The number of people with a TRANTIME of 0 is 2062945 for a rate of 60.27% Of these people, includes those who are unemployed (72315), not even in the labor force (1192654), or not employed, unemployed, or not in labor force (549898) which would occur from a N/A in EMPSTAT.
+
+```{r}
+commuters <- acs2024 %>%
+  filter(employed ==1)
+```
+
+To analyze only people that are considered commuters, we simply just filter for those considered "Employed" as those that are unemployed or not in the labor force would not have a commute. Furthermore, by just allowing those who are determined as "Employed" in the new subset, we eliminate any possibilities in which people were ineligible or given an N/A for employment status.
+
+```{r}
+commuters %>%
+  summarise("Total" = n())
+
+commuters %>% 
+  summarise("Minimum Value" = min(TRANTIME))
+```
+
+After filtering for only those that would have a commute time, we have 248087 observations. The minimum, however, remains at 0. This still makes sense as those who might be self employed or live extremely close to their workplace would have a commute that is less than 1 minute.
+
+```{r}
+#reporting the employment status was omitted due to the filtering of commuters
+commuterstable <- data.frame(
+  Variable = c("Age", "Female", "Less than High School", "High School Only", 
+               "Some College", "College Only", "Advanced Degree", 
+               "Commute Time (mins)", "Total Income ($)"),
+  
+  N = c(length(commuters$AGE), length(commuters$female),length(commuters$educ_lhs), 
+        length(commuters$educ_hs), length(commuters$educ_somecol), 
+        length(commuters$educ_college), length(commuters$educ_adv),
+        length(commuters$TRANTIME), length(commuters$INCTOT)),
+  
+  Mean = c(mean(commuters$AGE), mean(commuters$female), mean(commuters$educ_lhs), 
+           mean(commuters$educ_hs), mean(commuters$educ_somecol), 
+           mean(commuters$educ_college), mean(commuters$educ_adv),
+           mean(commuters$TRANTIME), mean(commuters$INCTOT) / 1e6),
+  
+  SD = c(sd(commuters$AGE), sd(commuters$female),sd(commuters$educ_lhs), 
+         sd(commuters$educ_hs), sd(commuters$educ_somecol), 
+         sd(commuters$educ_college), sd(commuters$educ_adv), sd(commuters$TRANTIME), 
+         sd(commuters$INCTOT) / 1e6),
+  
+  Min = c(min(commuters$AGE), min(commuters$female), min(commuters$educ_lhs), 
+          min(commuters$educ_hs), min(commuters$educ_somecol), 
+          min(commuters$educ_college), min(commuters$educ_adv),
+          min(commuters$TRANTIME), min(commuters$INCTOT) / 1e6),
+  
+  Max = c(max(commuters$AGE), max(commuters$female),max(commuters$educ_lhs), 
+          max(commuters$educ_hs), max(commuters$educ_somecol), 
+          max(commuters$educ_college), max(commuters$educ_adv),
+          max(commuters$TRANTIME), max(commuters$INCTOT) / 1e6)
+)
+
+#acs2024table
+acs2024rounded <- acs2024table
+acs2024rounded[, -1] <- round(acs2024table[, -1], 2)
+#acs2024rounded
+
+knitr::kable(acs2024rounded, 
+             caption = "Table 2: Summary Statistics for 2024 ACS Commuters Sample",
+             digits = 2)
 ```
