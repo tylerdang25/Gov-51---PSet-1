@@ -1,9 +1,11 @@
 ---
 title: "Gov 51 - Pset 1"
-author: "Tyler Dang - https://github.com/tylerdang25/Gov-51---PSet-1.git"
+author: "Tyler Dang"
 format: pdf
 editor: visual
 ---
+
+<https://github.com/tylerdang25/Gov-51---PSet-1.git>
 
 ## 2. Get to Know Your Data
 
@@ -228,3 +230,14 @@ Comparing our two tables (one of the entire 2024 ACS dataset and the second of t
 
 From this fact (and the shape of the commuters distribution above) we know that the dataset distribution would be much more skewed left with an even higher peak at 0 minutes.
 
+## 5. The Weight of Evidence
+
+```{r}
+weighted.mean(commuters$TRANTIME,commuters$PERWT)
+```
+
+After including the weight in calculating the mean commute time, we see that the mean slightly increases from our 23.02 mean found from simple summary of the subset commuters to 23.12. This is an increase of .12 minutes.
+
+The without weight mean of 23.02 represents the average commute time for people specifically observed in the sample. These people are those that were already determined to reasonably have a commute time. This average, while applicable to the general population, ignores the fact that the respondents may have different proportions of representing the entire U.S. population. In simpler terms: one respondent may be representative of three people in the general population while another respondent may be representative of ten. As such, the mean fails to convey the nuance of the study.
+
+Meanwhile, the weighted weight of 23.12 represents the average commute time for people in the U.S. Again, this is for those who would be considered "commuters." This average utilizes the pre-coded variable that explains how many people in the general population the respondent represents. By weighing on this variable, we have a more accurate, representative statistic for the overall public.
